@@ -1,5 +1,5 @@
 # TensorFlow implementation of DQN
-![demo](https://raw.githubusercontent.com/algolab-inc/tf-dqn-simple/master/demo-catch_ball.gif)
+![demo](https://raw.githubusercontent.com/sasaco/tf-dqn-オセロ/master/demo-catch_ball.gif)
 
 ## Usage
 ### Train
