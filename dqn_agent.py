@@ -10,12 +10,14 @@ class DQNAgent:
     Multi Layer Perceptron with Experience Replay
     """
 
-    def __init__(self, enable_actions, environment_name):
+    def __init__(self, enable_actions, environment_name, rows, cols):
         # parameters
         self.name = os.path.splitext(os.path.basename(__file__))[0]
         self.environment_name = environment_name
-        self.enable_actions = enable_actions
+        self.enable_actions = enable_actions.tolist()
         self.n_actions = len(self.enable_actions)
+        self.rows = rows
+        self.cols = cols
         self.minibatch_size = 32
         self.replay_memory_size = 1000
         self.learning_rate = 0.001
@@ -34,19 +36,20 @@ class DQNAgent:
         self.current_loss = 0.0
 
     def init_model(self):
-        # input layer (8 x 8)
-        self.x = tf.placeholder(tf.float32, [None, 8, 8])
+        # input layer (rows x cols)
+        self.x = tf.placeholder(tf.float32, [None, self.rows, self.cols])
 
-        # flatten (64)
-        x_flat = tf.reshape(self.x, [-1, 64])
+        # flatten (rows x cols)
+        size = self.rows * self.cols
+        x_flat = tf.reshape(self.x, [-1, size])
 
         # fully connected layer (32)
-        W_fc1 = tf.Variable(tf.truncated_normal([64, 64], stddev=0.01))
-        b_fc1 = tf.Variable(tf.zeros([64]))
+        W_fc1 = tf.Variable(tf.truncated_normal([size, size], stddev=0.01))
+        b_fc1 = tf.Variable(tf.zeros([size]))
         h_fc1 = tf.nn.relu(tf.matmul(x_flat, W_fc1) + b_fc1)
 
         # output layer (n_actions)
-        W_out = tf.Variable(tf.truncated_normal([64, self.n_actions], stddev=0.01))
+        W_out = tf.Variable(tf.truncated_normal([size, self.n_actions], stddev=0.01))
         b_out = tf.Variable(tf.zeros([self.n_actions]))
         self.y = tf.matmul(h_fc1, W_out) + b_out
 
@@ -69,10 +72,10 @@ class DQNAgent:
         # Q(state, action) of all actions
         return self.sess.run(self.y, feed_dict={self.x: [state]})[0]
 
-    def select_action(self, state, epsilon):
+    def select_action(self, state, targets, epsilon):
         if np.random.rand() <= epsilon:
             # random
-            return np.random.choice(self.enable_actions)
+            return np.random.choice(targets)
         else:
             # max_action Q(state, action)
             return self.enable_actions[np.argmax(self.Q_values(state))]

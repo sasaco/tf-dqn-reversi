@@ -3,78 +3,81 @@ from __future__ import division
 import argparse
 import os
 
-import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 
-from catch_ball import CatchBall
+from Reversi import Reversi
 from dqn_agent import DQNAgent
+  
+env = Reversi()
+env.print_screen()
+"""
+print("----------- エージェント -----------------")
+agent = DQNAgent(env.enable_actions, env.name, env.screen_n_rows, env.screen_n_cols)
+print(agent.enable_actions)
+state, reward, terminal = env.observe()
+#print(agent.Q_values[state])
+
+action = agent.select_action(state, agent.exploration)
+"""
+
+print("----------- 1手目 -----------------")
+pos = 43
+print("○ pos={:}".format(pos))
+env.put_piece(pos, 1)
+env.print_screen()
+
+print("----------- 2手目 -----------------")
+pos = 44
+print("● pos={:}".format(pos))
+env.put_piece(pos, 2)
+env.print_screen()
 
 
-def init():
-    img.set_array(state_t_1)
-    plt.axis("off")
-    return img,
+print("----------- 3手目 -----------------")
+pos = 21
+print("○ pos={:}".format(pos))
+env.put_piece(pos, 1)
+env.print_screen()
+
+print("----------- 4手目 -----------------")
+pos = 26
+print("● pos={:}".format(pos))
+env.put_piece(pos, 2)
+env.print_screen()
 
 
-def animate(step):
-    global win, lose
-    global state_t_1, reward_t, terminal
+print(env.get_enables(1))
+print("----------- 5手目 -----------------")
+pos = 34
+print("○ pos={:}".format(pos))
+env.put_piece(pos, 1)
+env.print_screen()
 
-    if terminal:
-        env.reset()
+print("----------- 6手目 -----------------")
+pos = 61
+print("● pos={:}".format(pos))
+env.put_piece(pos, 2)
+env.print_screen()
 
-        # for log
-        if reward_t == 1:
-            win += 1
-        elif reward_t == -1:
-            lose += 1
-
-        print("WIN: {:03d}/{:03d} ({:.1f}%)".format(win, win + lose, 100 * win / (win + lose)))
-
-    else:
-        state_t = state_t_1
-
-        # execute action in environment
-        action_t = agent.select_action(state_t, 0.0)
-        env.execute_action(action_t)
-
-    # observe environment
-    state_t_1, reward_t, terminal = env.observe()
-
-    # animate
-    img.set_array(state_t_1)
-    plt.axis("off")
-    return img,
+print("----------- 7手目 -----------------")
+pos = 22
+print("○ pos={:}".format(pos))
+env.put_piece(pos, 1)
+env.print_screen()
 
 
-if __name__ == "__main__":
-    # args
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--model_path")
-    parser.add_argument("-s", "--save", dest="save", action="store_true")
-    parser.set_defaults(save=False)
-    args = parser.parse_args()
 
-    # environmet, agent
-    env = CatchBall()
-    agent = DQNAgent(env.enable_actions, env.name)
-    agent.load_model(args.model_path)
+print("----------- 8手目 -----------------")
+pos = 13
+print("● pos={:}".format(pos))
+env.put_piece(pos, 2)
+env.print_screen()
 
-    # variables
-    win, lose = 0, 0
-    state_t_1, reward_t, terminal = env.observe()
 
-    # animate
-    fig = plt.figure(figsize=(env.screen_n_rows / 2, env.screen_n_cols / 2))
-    fig.canvas.set_window_title("{}-{}".format(env.name, agent.name))
-    img = plt.imshow(state_t_1, interpolation="none", cmap="gray")
-    ani = animation.FuncAnimation(fig, animate, init_func=init, interval=(1000 / env.frame_rate), blit=True)
 
-    if args.save:
-        # save animation (requires ImageMagick)
-        ani_path = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), "tmp", "demo-{}.gif".format(env.name))
-        ani.save(ani_path, writer="imagemagick", fps=env.frame_rate)
-    else:
-        # show animation
-        plt.show()
+
+
+
+
+
+
