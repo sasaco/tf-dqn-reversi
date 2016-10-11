@@ -1,5 +1,4 @@
 # TensorFlow implementation of DQN
-![demo](https://raw.githubusercontent.com/sasaco/tf-dqn-オセロ/master/demo-catch_ball.gif)
 
 ## Usage
 ### Train
@@ -14,5 +13,4 @@ python test.py
 
 ## Requirements
 * TenforFlow
-* Matplotlib
-* ImageMagick (Optional)
+* numpy
