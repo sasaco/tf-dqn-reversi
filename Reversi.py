@@ -2,12 +2,13 @@ import os
 import numpy as np
 
 class Reversi:
+
     def __init__(self):
         # parameters
         self.name = os.path.splitext(os.path.basename(__file__))[0]
         self.Blank = 0
-        self.White = 1
-        self.Black = 2
+        self.Black = 1
+        self.White = 2
         self.screen_n_rows = 8
         self.screen_n_cols = 8
         self.enable_actions = np.arange(self.screen_n_rows*self.screen_n_cols)
@@ -49,10 +50,10 @@ class Reversi:
                 s2 = ''
                 if self.screen[r][c] == self.Blank:
                     s2 = '{0:2d}'.format(self.enable_actions[i])
-                elif self.screen[r][c] == self.White:
-                    s2 = '○'
                 elif self.screen[r][c] == self.Black:
                     s2 = '●'
+                elif self.screen[r][c] == self.White:
+                    s2 = '○'
                 s1 = s1 + ' ' + s2
                 i += 1
             print(s1)
@@ -121,17 +122,17 @@ class Reversi:
     def winner(self):
         """ 勝ったほうを返す """
         if self.terminal == True:
-            White_score = self.get_score(self.White)
+            Black_score = self.get_score(self.Black)
         else:
             return -1
             
         border = (self.screen_n_rows*self.screen_n_cols)/2
-        if White_score == border:
+        if Black_score == border:
             return 0 # 引き分け
-        if White_score > border:
-            return self.White # Whiteの勝ち
-        else:
+        if Black_score > border:
             return self.Black # Blackの勝ち
+        else:
+            return self.White # Whiteの勝ち
         
     def get_score(self, color):
         """ 指定した色の現在のスコアを返す """
@@ -175,8 +176,8 @@ class Reversi:
             
        
     def isEnd(self):
-        e1 = self.get_enables(self.White)        
-        e2 = self.get_enables(self.Black)  
+        e1 = self.get_enables(self.Black)        
+        e2 = self.get_enables(self.White)  
         if len(e1) == 0 and len(e2) == 0:
             #双方置けなくなったらゲーム終了
             return True
@@ -195,4 +196,39 @@ class Reversi:
         return self.update(action, color)
 
  
+if __name__ == "__main__":
+   # game
+    env = Reversi()
+    print("------------- GAME START ---------------")
+    while not env.isEnd():
+        for i in range(1,3):
+            if i == env.Black:
+                print("*** 先手ターン● ***")
+            else:
+                print("*** 後手ターン○ ***")
+            env.print_screen()
+            enables = env.get_enables(i)
+            if len(enables) > 0:
+                flg = False
+                while not flg:
+                    print("番号を入力してください")
+                    print(enables)
+                    inp = input('>>>  ')
+                    action_t = int(inp)
+                    for j in enables:                
+                        if action_t == j:
+                            flg = True                       
+                            break
+                n = env.execute_action(action_t, i)
+
+            else:
+                print("パス")
+                       
+
+    print("*** ゲーム終了 ***")
+    env.print_screen()
+    if env.winner() == env.Black:
+        print("先手●の勝ち！ スコアは、{:}/{:}です。".format(env.get_score(env.Black),len(env.enable_actions)))
+    else:
+        print("後手○の勝ち！ スコアは、{:}/{:}です。".format(env.get_score(env.White),len(env.enable_actions)))
  

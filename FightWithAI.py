@@ -1,7 +1,5 @@
 
 import argparse
-import os
-import numpy as np
 
 from Reversi import Reversi
 from dqn_agent import DQNAgent

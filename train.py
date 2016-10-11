@@ -12,9 +12,9 @@ if __name__ == "__main__":
     # environment, agent
     env = Reversi()
     players = []
-    # player 1
+    # player 1 = env.Black
     players.append(DQNAgent(env.enable_actions, env.name, env.screen_n_rows, env.screen_n_cols))
-    # player 2
+    # player 2 = env.White
     players.append(DQNAgent(env.enable_actions, env.name, env.screen_n_rows, env.screen_n_cols))
 
     # variables
@@ -41,8 +41,6 @@ if __name__ == "__main__":
                 targets = env.get_enables(i+1)
                 if len(targets) > 0:
                     # どこかに置く場所がある場合
-                    counter1 = 0
-                    view = False
                     while not enable > 0: #有効な選択がなされるまで繰り返す
                         # 行動を選択
                         if len(targets) == 1:
@@ -60,19 +58,6 @@ if __name__ == "__main__":
                         agent.store_experience(state_t, action_t, reward_t, state_t_1, terminal)
                         # experience replay
                         agent.experience_replay()
-                        # for log
-                        if counter1 > 1000 and view == False:
-                            view = True
-                            print("player:{:1d} is trial count > {:1d}----------------------------"
-                                .format(i+1, counter1))
-                            env.print_screen()
-                            
-                        if counter1 > 1060:
-                            sys.exit()
-                            
-                        if view == True:
-                             print("action={:2d}, reward={:}".format(action_t, reward_t))                      
-                        counter1 +=1
                     
                     # for log
                     loss[i] += agent.current_loss
@@ -92,9 +77,9 @@ if __name__ == "__main__":
                     print("player:{:1d} is pass".format(i+1))
                   
             w = env.winner()
-            if w == env.White:
+            if w == env.Black:
                 win += 1               
-            elif w == env.Black:
+            elif w == env.White:
                 win -= 1               
                         
         print("EPOCH: {:03d}/{:03d} | WIN: player{:1d} | LOSS: {:.4f} | Q_MAX: {:.4f}".format(
