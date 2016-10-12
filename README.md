@@ -8,7 +8,7 @@ python train.py
 
 ### Test
 ```
-python test.py
+python FightWithAI.py
 ```
 
 ## Requirements
