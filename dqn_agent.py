@@ -73,12 +73,27 @@ class DQNAgent:
         return self.sess.run(self.y, feed_dict={self.x: [state]})[0]
 
     def select_action(self, state, targets, epsilon):
+        
+        rightly = False
+        while rightly == False:
+            act = self.enable_actions[np.argmax(self.Q_values(state))]
+            if act in targets:
+                rightly = True
+            else:
+                """ 
+                有効でないアクションをしたら、
+                強制的にマイナス報酬を与えて理解するまで学習
+                """
+                reward_t = -1
+                self.store_experience(state, act, reward_t, state, False)
+                self.experience_replay()
+                
         if np.random.rand() <= epsilon:
             # random
             return np.random.choice(targets)
         else:
             # max_action Q(state, action)
-            return self.enable_actions[np.argmax(self.Q_values(state))]
+            return act
 
     def store_experience(self, state, action, reward, state_1, terminal):
         self.D.append((state, action, reward, state_1, terminal))
