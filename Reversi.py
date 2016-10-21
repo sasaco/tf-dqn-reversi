@@ -199,7 +199,7 @@ if __name__ == "__main__":
                         if action_t == j:
                             flg = True                       
                             break
-                n = env.execute_action(action_t, i)
+                n = env.update(action_t, i)
 
             else:
                 print("パス")

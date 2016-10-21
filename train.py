@@ -12,6 +12,7 @@ if __name__ == "__main__":
     env = Reversi()
     # agent1 = env.Black
     agent1 = DQNAgent(env.enable_actions, env.name, env.screen_n_rows, env.screen_n_cols)
+
     # agent2 = env.White
     agent2 = DQNAgent(env.enable_actions, env.name, env.screen_n_rows, env.screen_n_cols)
 
@@ -79,9 +80,18 @@ if __name__ == "__main__":
             if len(targets1) > 0:
                 agent1.store_experience(state0, action1, 0, state1, terminal)
                 agent1.experience_replay()
+                #対戦相手は、すべての手を登録する
+                for tr in targets1:
+                    agent2.store_experience(state0, action1, 0, state1, terminal)
+                    agent2.experience_replay()
+                    
             if len(targets2) > 0:
                 agent2.store_experience(state2, action2, 0, state3, terminal)
                 agent2.experience_replay()
+                #対戦相手は、すべての手を登録する
+                for tr in targets2:
+                    agent1.store_experience(state2, action2, 0, state3, terminal)
+                    agent1.experience_replay()
 
                                 
         w = env.winner()                    

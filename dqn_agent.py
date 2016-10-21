@@ -1,5 +1,6 @@
 from collections import deque
 import os
+import sys
 
 import numpy as np
 import tensorflow as tf
@@ -44,15 +45,18 @@ class DQNAgent:
         x_flat = tf.reshape(self.x, [-1, size])
 
         # fully connected layer (32)
+        #W_fc1 = tf.Variable(tf.random_uniform(shape=[size, self.n_actions], minval=0,maxval=1,dtype=tf.float32))
         W_fc1 = tf.Variable(tf.truncated_normal([size, size], stddev=0.01))
         b_fc1 = tf.Variable(tf.zeros([size]))
         h_fc1 = tf.nn.relu(tf.matmul(x_flat, W_fc1) + b_fc1)
 
         # output layer (n_actions)
+        #W_out = tf.Variable(tf.random_uniform(shape=[size, self.n_actions], minval=0,maxval=1,dtype=tf.float32))
         W_out = tf.Variable(tf.truncated_normal([size, self.n_actions], stddev=0.01))
         b_out = tf.Variable(tf.zeros([self.n_actions]))
+        
         self.y = tf.matmul(h_fc1, W_out) + b_out
-
+        
         # loss function
         self.y_ = tf.placeholder(tf.float32, [None, self.n_actions])
         self.loss = tf.reduce_mean(tf.square(self.y_ - self.y))
@@ -70,23 +74,21 @@ class DQNAgent:
 
     def Q_values(self, state):
         # Q(state, action) of all actions
-        return self.sess.run(self.y, feed_dict={self.x: [state]})[0]
+        Qs = self.sess.run(self.y, feed_dict={self.x: [state]})[0]
+        return Qs
 
     def select_action(self, state, targets, epsilon):
         
-        rightly = False
-        while rightly == False:
+        while True:
             act = self.enable_actions[np.argmax(self.Q_values(state))]
             if act in targets:
-                rightly = True
+                break
             else:
-                """ 
-                有効でないアクションをしたら、
-                強制的にマイナス報酬を与えて理解するまで学習
-                """
+                """ the choice not effective then learning to understand """
                 reward_t = -1
                 self.store_experience(state, act, reward_t, state, False)
                 self.experience_replay()
+
                 
         if np.random.rand() <= epsilon:
             # random
