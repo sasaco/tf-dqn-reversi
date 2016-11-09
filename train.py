@@ -7,7 +7,7 @@ from dqn_agent import DQNAgent
 if __name__ == "__main__":
     
     # parameters
-    n_epochs = 5000
+    n_epochs = 4000
     # environment, agent
     env = Reversi()
  
@@ -46,7 +46,9 @@ if __name__ == "__main__":
                         #次の状態
                         state_X = tmp.screen
                         target_X = tmp.get_enables(playerID[i+1])
-                       
+                        if len(target_X) == 0:
+                            target_X = tmp.get_enables(playerID[i])
+
                         # 両者トレーニング
                         for j in range(0, len(players)):
                             reword = 0
