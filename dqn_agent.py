@@ -1,5 +1,6 @@
 from collections import deque
 import os
+import sys
 
 import numpy as np
 import tensorflow as tf
@@ -73,15 +74,29 @@ class DQNAgent:
         return self.sess.run(self.y, feed_dict={self.x: [state]})[0]
 
     def select_action(self, state, targets, epsilon):
+    
         if np.random.rand() <= epsilon:
             # random
             return np.random.choice(targets)
         else:
             # max_action Q(state, action)
-            return self.enable_actions[np.argmax(self.Q_values(state))]
+            qvalue, action = self.select_enable_action(state, targets)
+            return action
+            
+    def select_enable_action(self, state, targets):
+        Qs = self.Q_values(state)
+        descend = np.sort(Qs)
+        index = np.argsort(descend)
+        for action in reversed(index):
+            if action in targets:
+                break 
+        # max_action Q(state, action)
+        qvalue = descend[action]       
+        return qvalue, action      
+            
 
-    def store_experience(self, state, action, reward, state_1, terminal):
-        self.D.append((state, action, reward, state_1, terminal))
+    def store_experience(self, state, targets, action, reward, state_1, targets_1, terminal):
+        self.D.append((state, targets, action, reward, state_1, targets_1, terminal))
 
     def experience_replay(self):
         state_minibatch = []
@@ -92,7 +107,7 @@ class DQNAgent:
         minibatch_indexes = np.random.randint(0, len(self.D), minibatch_size)
 
         for j in minibatch_indexes:
-            state_j, action_j, reward_j, state_j_1, terminal = self.D[j]
+            state_j, targets_j, action_j, reward_j, state_j_1, targets_j_1, terminal = self.D[j]
             action_j_index = self.enable_actions.index(action_j)
 
             y_j = self.Q_values(state_j)
@@ -101,7 +116,8 @@ class DQNAgent:
                 y_j[action_j_index] = reward_j
             else:
                 # reward_j + gamma * max_action' Q(state', action')
-                y_j[action_j_index] = reward_j + self.discount_factor * np.max(self.Q_values(state_j_1))
+                qvalue, action = self.select_enable_action(state_j_1, targets_j_1)
+                y_j[action_j_index] = reward_j + self.discount_factor * qvalue
 
             state_minibatch.append(state_j)
             y_minibatch.append(y_j)
@@ -111,6 +127,7 @@ class DQNAgent:
 
         # for log
         self.current_loss = self.sess.run(self.loss, feed_dict={self.x: state_minibatch, self.y_: y_minibatch})
+
 
     def load_model(self, model_path=None):
         if model_path:

@@ -25,10 +25,6 @@ class Reversi:
         self.set_cells(35, self.Black)
         self.set_cells(36, self.White)
 
-        # reset other variables
-        self.reward = 0
-        self.terminal = False
-
     def get_cells(self, i):
         r = int(i / self.screen_n_cols)
         c = int(i - ( r * self.screen_n_cols))
@@ -121,17 +117,14 @@ class Reversi:
         
     def winner(self):
         """ 勝ったほうを返す """
-        if self.terminal == True:
-            Black_score = self.get_score(self.Black)
-        else:
-            return -1
+        Black_score = self.get_score(self.Black)
+        White_score = self.get_score(self.White)
             
-        border = (self.screen_n_rows*self.screen_n_cols)/2
-        if Black_score == border:
+        if Black_score == White_score:
             return 0 # 引き分け
-        if Black_score > border:
+        elif Black_score > White_score:
             return self.Black # Blackの勝ち
-        else:
+        elif Black_score < White_score:
             return self.White # Whiteの勝ち
         
     def get_score(self, color):
@@ -163,14 +156,7 @@ class Reversi:
         if n  > 0:
             # そのマスは有効です
             self.put_piece(action, color)
-            """ 評価
-            最大で18駒取れるので 18駒とっらたら1 とする
-            """
-            self.reward = n / 18
-        else:
-            self.reward = -1
-            
-        self.terminal = self.isEnd() 
+
 
         return n
             
@@ -188,12 +174,6 @@ class Reversi:
 
         return True
 
-    
-    def observe(self):
-        return self.screen, self.reward, self.terminal
-
-    def execute_action(self, action, color):
-        return self.update(action, color)
 
  
 if __name__ == "__main__":

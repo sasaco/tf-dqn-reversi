@@ -47,14 +47,8 @@ if __name__ == "__main__":
         env.print_screen()
         enables = env.get_enables(2)
         if len(enables) > 0:
-            flg = False
-            while not flg:
-                action_t = agent.select_action(env.screen, None, 0.0)
-                print('>>>  {:}'.format(action_t))              
-                for i in enables:                
-                    if action_t == i:
-                        flg = True                       
-                        break
+            action_t = agent.select_enable_action(env.screen, enables)
+            print('>>>  {:}'.format(action_t))              
             env.execute_action(action_t, 2)
         else:
             print("パス")
