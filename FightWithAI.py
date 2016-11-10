@@ -36,7 +36,7 @@ if __name__ == "__main__":
                         flg = True                       
                         break
                 
-            env.execute_action(action_t, 1)
+            env.update(action_t, 1)
         else:
             print("パス")
             
@@ -47,9 +47,9 @@ if __name__ == "__main__":
         env.print_screen()
         enables = env.get_enables(2)
         if len(enables) > 0:
-            action_t = agent.select_enable_action(env.screen, enables)
+            qvalue, action_t = agent.select_enable_action(env.screen, enables)
             print('>>>  {:}'.format(action_t))              
-            env.execute_action(action_t, 2)
+            env.update(action_t, 2)
         else:
             print("パス")
 
