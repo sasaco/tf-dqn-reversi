@@ -85,13 +85,14 @@ class DQNAgent:
             
     def select_enable_action(self, state, targets):
         Qs = self.Q_values(state)
-        descend = np.sort(Qs)
-        index = np.argsort(descend)
+        #descend = np.sort(Qs)
+        index = np.argsort(Qs)
         for action in reversed(index):
             if action in targets:
                 break 
         # max_action Q(state, action)
-        qvalue = descend[action]       
+        qvalue = Qs[action]       
+
         return qvalue, action      
             
 
