@@ -62,6 +62,7 @@ if __name__ == "__main__":
         else:
             # ランダムに打つ確率を減らす
             player[target_player].exploration = win_rate
+            player_win_rate[target_player] = win_rate
             # 次のプレーヤーに交代
             i += 1
 
