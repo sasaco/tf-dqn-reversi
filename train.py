@@ -18,11 +18,6 @@ if __name__ == "__main__":
     player[env.Black] = DQNAgent(env.enable_actions, '{}player{}'.format(env.name, env.Black), env.screen_n_rows, env.screen_n_cols)
     player[env.White] = DQNAgent(env.enable_actions, '{}player{}'.format(env.name, env.White), env.screen_n_rows, env.screen_n_cols)
 
-    # プレーヤーの学習前の勝率
-    player_win_rate = dict()
-    player_win_rate[env.Black] = 0.0
-    player_win_rate[env.White] = 0.0
-
     # コロシアム：自己対戦をする環境
     Colosseum = self_play(env, player)
 
@@ -53,16 +48,19 @@ if __name__ == "__main__":
         # eval:対戦して勝率を
         win_rate = Evaluator.start(target_player)
 
-        # 前のAIより強くなったのか判定
-        if win_rate < player_win_rate[target_player]:
+        # 相手AIよりより強くなったのか判定
+        if win_rate < 1:
             # 弱かったら元に戻す
             player[target_player].load_model()
             # ランダムに打つ確率を増やす
-            player[target_player].exploration = min(max(win_rate, 0.1), 0.9)
+            exploration = player[target_player].exploration
+            exploration -= 0.01
+            player[target_player].exploration = max(exploration, 0.1)
         else:
             # ランダムに打つ確率を減らす
-            player[target_player].exploration = min(max(win_rate, 0.1), 0.9)
-            player_win_rate[target_player] = win_rate
+            exploration = player[target_player].exploration
+            exploration += 0.1
+            player[target_player].exploration = min(exploration, 0.9)
             # 次のプレーヤーに交代
             i += 1
 

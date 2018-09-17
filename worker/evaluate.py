@@ -9,7 +9,7 @@ class evaluate:
 
     def start(self, learning_target_player: int):
 
-        n_epochs = 100
+        n_epochs = 1
         win_count = 0
 
         for i in range(n_epochs):

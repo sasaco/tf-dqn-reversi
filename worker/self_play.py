@@ -11,7 +11,7 @@ class self_play:
 
     def start(self, learning_target_player: int, save = True):
 
-        n_epochs = 100
+        n_epochs = 50
         move_list = []
         win_count = 0
 
@@ -27,8 +27,9 @@ class self_play:
             # 行動を学習対象として保存
             move_list.extend(move)
 
-            print("TARGET: {:01d} | self_play | EPOCH: {:04d}/{:04d} | WIN RATE: {:.4f}".format(
-                               learning_target_player, i+1, n_epochs, win_count/(i+1) ))
+            print("TARGET: {:01d} | self_play | EXP: {:.4f} | EPOCH: {:04d}/{:04d} | WIN RATE: {:.4f}".format(
+                               learning_target_player, self.player[learning_target_player].exploration,
+                               i+1, n_epochs, win_count/(i+1) ))
 
         # 行動を学習対象として保存
         if save == True:

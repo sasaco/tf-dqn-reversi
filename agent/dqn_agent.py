@@ -19,7 +19,7 @@ class DQNAgent:
         self.n_actions = len(self.enable_actions)
         self.rows = rows
         self.cols = cols
-        self.minibatch_size = 256
+        self.minibatch_size = 3000
         self.replay_memory_size = 100000
         self.learning_rate = 0.001
         self.discount_factor = 0.9
