@@ -58,10 +58,10 @@ if __name__ == "__main__":
             # 弱かったら元に戻す
             player[target_player].load_model()
             # ランダムに打つ確率を増やす
-            player[target_player].exploration = win_rate
+            player[target_player].exploration = min(max(win_rate, 0.1), 0.9)
         else:
             # ランダムに打つ確率を減らす
-            player[target_player].exploration = win_rate
+            player[target_player].exploration = min(max(win_rate, 0.1), 0.9)
             player_win_rate[target_player] = win_rate
             # 次のプレーヤーに交代
             i += 1

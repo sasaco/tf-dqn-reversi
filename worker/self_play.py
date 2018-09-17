@@ -11,7 +11,7 @@ class self_play:
 
     def start(self, learning_target_player: int, save = True):
 
-        n_epochs = 200
+        n_epochs = 100
         move_list = []
         win_count = 0
 
