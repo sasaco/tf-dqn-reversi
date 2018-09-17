@@ -9,7 +9,7 @@ class self_play:
         self.player = player
 
 
-    def start(self, learning_target_player: int):
+    def start(self, learning_target_player: int, save = True):
 
         n_epochs = 1000
         move_list = []
@@ -31,8 +31,10 @@ class self_play:
                                learning_target_player, i+1, n_epochs, win_count/(i+1) ))
 
         # 行動を学習対象として保存
-        MoveHistory.save_play_data(learning_target_player, move_list)
+        if save == True:
+            MoveHistory.save_play_data(learning_target_player, move_list)
 
+        return move_list
 
     def start_game(self, learning_target_player):
 

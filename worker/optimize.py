@@ -8,10 +8,11 @@ class optimize:
         self.env = env
         self.player = player
 
-    def start(self, learning_target_player: int):
+    def start(self, learning_target_player: int, move_list = None):
 
         # 自己対戦データを読み込む
-        move_list = MoveHistory.load_play_data(learning_target_player)
+        if move_list == None:
+            move_list = MoveHistory.load_play_data(learning_target_player)
 
         # 学習対象
         agent = self.player[learning_target_player]
