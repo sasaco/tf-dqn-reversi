@@ -12,30 +12,41 @@ class self_play:
     def start(self, learning_target_player: int, save = True):
 
         n_epochs = 50
+
         move_list = []
         win_count = 0
+        i = 0
 
-        for i in range(n_epochs):
- 
+        self.player[learning_target_player].exploration = 0.9
+
+        while win_count < n_epochs:
+            i += 1
+
             # 1ゲーム開始
             move = self.start_game(learning_target_player)
 
             # for log 勝率を計算する
+            expl = self.player[learning_target_player].exploration
             if self.env.winner() == learning_target_player:
                 win_count += 1
+                self.player[learning_target_player].exploration = min(expl+0.01,0.9)
+            else:
+                self.player[learning_target_player].exploration = max(expl-0.1,0.1)
+
 
             # 行動を学習対象として保存
             move_list.extend(move)
 
-            print("TARGET: {:01d} | self_play | EXP: {:.4f} | EPOCH: {:04d}/{:04d} | WIN RATE: {:.4f}".format(
+            print("TARGET: {:01d} | self_play | EXP: {:.4f} | EPOCH: {} | WIN: {}/{}".format(
                                learning_target_player, self.player[learning_target_player].exploration,
-                               i+1, n_epochs, win_count/(i+1) ))
+                               i, win_count, n_epochs ))
 
         # 行動を学習対象として保存
         if save == True:
             MoveHistory.save_play_data(learning_target_player, move_list)
 
         return move_list
+
 
     def start_game(self, learning_target_player):
 

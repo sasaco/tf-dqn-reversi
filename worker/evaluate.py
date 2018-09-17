@@ -20,9 +20,6 @@ class evaluate:
             if winner == learning_target_player:
                 win_count += 1
 
-            print("TARGET: {:01d} | evaluate | WIN: {:03d}/{:03d}".format(
-                                learning_target_player, win_count, (i+1) ))
-
         return win_count / n_epochs
 
 

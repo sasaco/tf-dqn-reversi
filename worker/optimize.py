@@ -8,7 +8,7 @@ class optimize:
         self.env = env
         self.player = player
 
-    def start(self, learning_target_player: int, move_list = None):
+    def set_experience(self, learning_target_player: int, move_list = None):
 
         # 自己対戦データを読み込む
         if move_list == None:
@@ -30,6 +30,10 @@ class optimize:
             target_X = move.targets_1
             end = move.terminal
             agent.store_experience(move.state, targets, action, reword, state_X, target_X, end)
+
+        return agent
+
+    def start(self, learning_target_player: int, agent):
 
         # 学習開始
         agent.experience_replay()  

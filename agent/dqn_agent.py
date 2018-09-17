@@ -20,10 +20,10 @@ class DQNAgent:
         self.rows = rows
         self.cols = cols
         self.minibatch_size = 3000
-        self.replay_memory_size = 100000
+        # self.replay_memory_size = 100000
         self.learning_rate = 0.001
         self.discount_factor = 0.9
-        self.exploration = 0.1
+        self.exploration = 0.6
         self.model_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
         self.model_name = "{}.ckpt".format(self.environment_name)
 
@@ -101,7 +101,7 @@ class DQNAgent:
             
 
     def restore_experience(self):
-        self.D = deque(maxlen=self.replay_memory_size)
+        self.D = [] # deque(maxlen=self.replay_memory_size)
 
     def store_experience(self, state, targets, action, reward, state_1, targets_1, terminal):
         self.D.append((state, targets, action, reward, state_1, targets_1, terminal))
