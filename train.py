@@ -42,7 +42,7 @@ if __name__ == "__main__":
         player[target_player].save_model()
 
         # self:自己対戦して棋譜を保存する
-        move_list = Colosseum.start(target_player)
+        move_list = Colosseum.start(target_player, False)
             
         # opt:棋譜から学習する
         loss = Traner.start(target_player, move_list)
