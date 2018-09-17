@@ -1,8 +1,8 @@
 
 import argparse
 
-from Reversi import Reversi
-from dqn_agent import DQNAgent
+from env.Reversi import Reversi
+from agent.dqn_agent import DQNAgent
 
 
 if __name__ == "__main__":

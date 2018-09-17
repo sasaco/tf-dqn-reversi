@@ -19,8 +19,8 @@ class DQNAgent:
         self.n_actions = len(self.enable_actions)
         self.rows = rows
         self.cols = cols
-        self.minibatch_size = 32
-        self.replay_memory_size = 1000
+        self.minibatch_size = 256
+        self.replay_memory_size = 100000
         self.learning_rate = 0.001
         self.discount_factor = 0.9
         self.exploration = 0.1
@@ -28,13 +28,14 @@ class DQNAgent:
         self.model_name = "{}.ckpt".format(self.environment_name)
 
         # replay memory
-        self.D = deque(maxlen=self.replay_memory_size)
+        self.restore_experience() 
 
         # model
         self.init_model()
 
         # variables
         self.current_loss = 0.0
+
 
     def init_model(self):
         # input layer (rows x cols)
@@ -69,9 +70,11 @@ class DQNAgent:
         self.sess = tf.Session()
         self.sess.run(tf.initialize_all_variables())
 
+
     def Q_values(self, state):
         # Q(state, action) of all actions
         return self.sess.run(self.y, feed_dict={self.x: [state]})[0]
+
 
     def select_action(self, state, targets, epsilon):
     
@@ -82,7 +85,8 @@ class DQNAgent:
             # max_action Q(state, action)
             qvalue, action = self.select_enable_action(state, targets)
             return action
-            
+ 
+        
     def select_enable_action(self, state, targets):
         Qs = self.Q_values(state)
         #descend = np.sort(Qs)
@@ -95,6 +99,9 @@ class DQNAgent:
 
         return qvalue, action      
             
+
+    def restore_experience(self):
+        self.D = deque(maxlen=self.replay_memory_size)
 
     def store_experience(self, state, targets, action, reward, state_1, targets_1, terminal):
         self.D.append((state, targets, action, reward, state_1, targets_1, terminal))
