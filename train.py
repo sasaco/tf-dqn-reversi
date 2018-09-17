@@ -51,7 +51,7 @@ if __name__ == "__main__":
         # 相手AIよりより強くなったのか判定
         if win_rate < 1:
             # 弱かったら元に戻す
-            player[target_player].load_model()
+            # player[target_player].load_model()
             # ランダムに打つ確率を増やす
             exploration = player[target_player].exploration
             exploration -= 0.01
