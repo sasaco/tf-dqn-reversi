@@ -27,17 +27,14 @@ if __name__ == "__main__":
     # エバリューター：評価する環境
     Evaluator = evaluate(env, player)
 
-    i = 0
+    game_idx = 0
     while True: # 永久に続ける
         
         # 学習対象プレーヤーを選択する
-        target_player = env.Black if i % 2 == 0 else env.White
-
-        # 学習前のプレーヤーを保持しておく
-        player[target_player].save_model()
+        target_player = env.Black if game_idx % 2 == 0 else env.White
 
         # self:自己対戦して棋譜を生成する
-        move_list = Colosseum.start(target_player, False)
+        move_list = Colosseum.start(target_player, game_idx, False)
         
         # opt:棋譜を保存する
         agent = Traner.set_experience(target_player, move_list)
@@ -48,7 +45,7 @@ if __name__ == "__main__":
         for i in range(n_train):
 
             # 棋譜から学習する
-            Traner.start(target_player, agent)
+            Traner.start(target_player, game_idx, agent)
 
             # eval:対戦して勝率を
             win_rate = Evaluator.start(target_player) 
@@ -57,7 +54,9 @@ if __name__ == "__main__":
 
         # 相手AIよりより強くなったのか判定
         if win_rate > 0.9:
-            i += 1
+            # プレーヤーを保持しておく
+            player[target_player].save_model()
+            game_idx += 1
 
         # 学習の終わった棋譜は削除する
         MoveHistory.remove_play_data(target_player)

@@ -33,14 +33,16 @@ class optimize:
 
         return agent
 
-    def start(self, learning_target_player: int, agent):
+    def start(self, learning_target_player: int, game_idx: int, agent):
 
         # 学習開始
         agent.experience_replay()  
         loss = agent.current_loss
 
-        print("TARGET: {:01d} | optimize | LOSS: {:.6f}".format(
-                            learning_target_player, loss))
+        print("{} | TARGET: {:01d} | optimize | LOSS: {:.6f}".format(
+                            game_idx,
+                            learning_target_player,
+                            loss))
 
         return loss
 

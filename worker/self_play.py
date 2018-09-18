@@ -9,7 +9,7 @@ class self_play:
         self.player = player
 
 
-    def start(self, learning_target_player: int, save = True):
+    def start(self, learning_target_player: int, game_idx: int,  save = True):
 
         n_epochs = 50
 
@@ -31,14 +31,16 @@ class self_play:
                 win_count += 1
                 self.player[learning_target_player].exploration = min(expl+0.01,0.9)
             else:
-                self.player[learning_target_player].exploration = max(expl-0.1,0.1)
+                self.player[learning_target_player].exploration = max(expl-0.05,0.4)
 
 
             # 行動を学習対象として保存
             move_list.extend(move)
 
-            print("TARGET: {:01d} | self_play | EXP: {:.4f} | EPOCH: {} | WIN: {}/{}".format(
-                               learning_target_player, self.player[learning_target_player].exploration,
+            print("{} | TARGET: {:01d} | self_play | EXP: {:.4f} | EPOCH: {} | WIN: {}/{}".format(
+                               game_idx, 
+                               learning_target_player, 
+                               self.player[learning_target_player].exploration,
                                i, win_count, n_epochs ))
 
         # 行動を学習対象として保存
