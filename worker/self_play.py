@@ -106,19 +106,20 @@ class self_play:
             self.env.update(action, self.env.next_player) 
 
             # ゲームが終わったら最終状態 を バッファに記録
-            if self.env.isEnd() == True:
-                buffer.terminal = True
-                if self.env.winner() == learning_target_player:
-                    buffer.reward = 1
+            if buffer != None:
+                if self.env.isEnd() == True:
+                    buffer.terminal = True
+                    if self.env.winner() == learning_target_player:
+                        buffer.reward = 1
+                    else:
+                        buffer.reward = -1
+                    move.append(buffer)
                 else:
-                    buffer.reward = -1
-                move.append(buffer)
-            elif buffer != None:
-                # ゲームの途中の手を保存
-                buffer.reward = 0
-                buffer.terminal = False
-                move.append(buffer)
-                buffer = None
+                    # ゲームの途中の手を保存
+                    buffer.reward = 0
+                    buffer.terminal = False
+                    move.append(buffer)
+                    buffer = None
 
         return move
 
