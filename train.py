@@ -62,14 +62,14 @@ if __name__ == "__main__":
             # プレーヤーを保持して
             player[target_player].save_model()
             # ランダムで打つ確率を初期値にセット
-            self.player[target_player].exploration = 0.8
+            player[target_player].exploration = 0.8
             # 学習する対象AIを変える
             game_idx += 1
         else:
             # n_train 回学習しても相手AIより強くならなかったら
             # もう一回繰り返すが、棋譜生成の際ランダムで打つ確率を上げる
             expl = self.player[target_player].exploration
-            self.player[target_player].exploration = max(expl-0.05,0.4)       
+            player[target_player].exploration = max(expl-0.05,0.4)       
 
         # 学習の終わった棋譜は削除する
         MoveHistory.remove_play_data(target_player)
