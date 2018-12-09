@@ -9,18 +9,15 @@ class evaluate:
 
     def start(self, learning_target_player: int):
 
-        n_epochs = 1
         win_count = 0
 
-        for i in range(n_epochs):
- 
-            # 1ゲーム開始
-            winner = self.start_game()
+        # 1ゲーム開始
+        winner = self.start_game()
 
-            if winner == learning_target_player:
-                win_count += 1
+        if winner == learning_target_player:
+            win_count += 1
 
-        return win_count / n_epochs
+        return win_count 
 
 
     def start_game(self):

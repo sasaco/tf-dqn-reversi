@@ -15,15 +15,18 @@ class DQNAgent:
         # parameters
         self.name = os.path.splitext(os.path.basename(__file__))[0]
         self.environment_name = environment_name
+
         self.enable_actions = enable_actions.tolist()
         self.n_actions = len(self.enable_actions)
         self.rows = rows
         self.cols = cols
+
         self.minibatch_size = 3000
         # self.replay_memory_size = 100000
         self.learning_rate = 0.001
         self.discount_factor = 0.9
-        self.exploration = 0.6
+        self.exploration = 0.8
+
         self.model_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
         self.model_name = "{}.ckpt".format(self.environment_name)
 
@@ -38,22 +41,40 @@ class DQNAgent:
 
 
     def init_model(self):
+
+        size = self.rows * self.cols
+
         # input layer (rows x cols)
         self.x = tf.placeholder(tf.float32, [None, self.rows, self.cols])
 
         # flatten (rows x cols)
-        size = self.rows * self.cols
         x_flat = tf.reshape(self.x, [-1, size])
 
-        # fully connected layer (32)
+        # fully connected layer
         W_fc1 = tf.Variable(tf.truncated_normal([size, size], stddev=0.01))
         b_fc1 = tf.Variable(tf.zeros([size]))
         h_fc1 = tf.nn.relu(tf.matmul(x_flat, W_fc1) + b_fc1)
 
+        W_fc2 = tf.Variable(tf.truncated_normal([size, 255], stddev=0.01))
+        b_fc2 = tf.Variable(tf.zeros([255]))
+        h_fc2 = tf.nn.relu(tf.matmul(h_fc1, W_fc2) + b_fc2)
+
+        W_fc3 = tf.Variable(tf.truncated_normal([255, 255], stddev=0.01))
+        b_fc3 = tf.Variable(tf.zeros([255]))
+        h_fc3 = tf.nn.relu(tf.matmul(h_fc2, W_fc3) + b_fc3)
+
+        W_fc4 = tf.Variable(tf.truncated_normal([255, 255], stddev=0.01))
+        b_fc4 = tf.Variable(tf.zeros([255]))
+        h_fc4 = tf.nn.relu(tf.matmul(h_fc3, W_fc4) + b_fc4)
+
+        W_fc5 = tf.Variable(tf.truncated_normal([255, 255], stddev=0.01))
+        b_fc5 = tf.Variable(tf.zeros([255]))
+        h_fc5 = tf.nn.relu(tf.matmul(h_fc4, W_fc5) + b_fc5)
+
         # output layer (n_actions)
-        W_out = tf.Variable(tf.truncated_normal([size, self.n_actions], stddev=0.01))
+        W_out = tf.Variable(tf.truncated_normal([255, self.n_actions], stddev=0.01))
         b_out = tf.Variable(tf.zeros([self.n_actions]))
-        self.y = tf.matmul(h_fc1, W_out) + b_out
+        self.y = tf.matmul(h_fc5, W_out) + b_out
 
         # loss function
         self.y_ = tf.placeholder(tf.float32, [None, self.n_actions])
@@ -103,8 +124,10 @@ class DQNAgent:
     def restore_experience(self):
         self.D = [] # deque(maxlen=self.replay_memory_size)
 
+
     def store_experience(self, state, targets, action, reward, state_1, targets_1, terminal):
         self.D.append((state, targets, action, reward, state_1, targets_1, terminal))
+
 
     def experience_replay(self):
         state_minibatch = []
@@ -146,6 +169,7 @@ class DQNAgent:
             checkpoint = tf.train.get_checkpoint_state(self.model_dir)
             if checkpoint and checkpoint.model_checkpoint_path:
                 self.saver.restore(self.sess, checkpoint.model_checkpoint_path)
+
 
     def save_model(self):
         self.saver.save(self.sess, os.path.join(self.model_dir, self.model_name))

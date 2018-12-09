@@ -33,30 +33,43 @@ if __name__ == "__main__":
         # 学習対象プレーヤーを選択する
         target_player = env.Black if game_idx % 2 == 0 else env.White
 
-        # self:自己対戦して棋譜を生成する
+        # 自己対戦して棋譜を生成する
         move_list = Colosseum.start(target_player, game_idx, False)
         
-        # opt:棋譜を保存する
+        # エージェントに棋譜を読み込ませる
         agent = Traner.set_experience(target_player, move_list)
-        print(len(agent.D))
+        # 学習データ数を出力
+        print("TARGET: {:01d} | learning Data Count {}".format(target_player, len(agent.D))) 
 
-        n_train = 100
-        win_rate = 0
+        # n_train 回学習する
+        n_train = 1000
+        # 勝率
+        win_rate = 0.0
         for i in range(n_train):
 
             # 棋譜から学習する
             Traner.start(target_player, game_idx, agent)
 
-            # eval:対戦して勝率を
+            # 対戦してみる
             win_rate = Evaluator.start(target_player) 
-            if win_rate > 0.9:
-                break
 
-        # 相手AIよりより強くなったのか判定
+            # 相手AIより強くなったら学習終了
+            if win_rate > 0.9:
+                 break
+
+        # 相手AIより強くなったら
         if win_rate > 0.9:
-            # プレーヤーを保持しておく
+            # プレーヤーを保持して
             player[target_player].save_model()
+            # ランダムで打つ確率を初期値にセット
+            self.player[target_player].exploration = 0.8
+            # 学習する対象AIを変える
             game_idx += 1
+        else:
+            # n_train 回学習しても相手AIより強くならなかったら
+            # もう一回繰り返すが、棋譜生成の際ランダムで打つ確率を上げる
+            expl = self.player[target_player].exploration
+            self.player[target_player].exploration = max(expl-0.05,0.4)       
 
         # 学習の終わった棋譜は削除する
         MoveHistory.remove_play_data(target_player)
