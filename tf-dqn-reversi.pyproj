@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{f3d53635-393e-45b0-a4fb-9367c3398e96}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>train.py</StartupFile>
+    <StartupFile>train_reversi_chainer.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -19,24 +19,8 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="agent\dqn_agent.py" />
-    <Compile Include="agent\__init__.py" />
-    <Compile Include="datas\MoveHistory.py" />
-    <Compile Include="datas\__init__.py" />
-    <Compile Include="env\Reversi.py" />
-    <Compile Include="env\__init__.py" />
-    <Compile Include="FightWithAI.py" />
-    <Compile Include="train.py" />
-    <Compile Include="worker\evaluate.py" />
-    <Compile Include="worker\optimize.py" />
-    <Compile Include="worker\self_play.py" />
-    <Compile Include="worker\__init__.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="agent" />
-    <Folder Include="datas" />
-    <Folder Include="env" />
-    <Folder Include="worker" />
+    <Compile Include="agent_chainer.py" />
+    <Compile Include="train_reversi_chainer.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>
