@@ -91,8 +91,8 @@ def main():
         # 学習の進捗表示
         if i % 100 == 0:            
             print('==== Episode {} : black win {}, black lose {}, draw {} ===='.format(i, win, lose, draw)) # 勝敗数はagent_1基準
-            print('<PLAYER_1> statistics: {}, epsilon {}'.format(agent_1.get_statistics(), agent_1.explorer.epsilon))
-            print('<PLAYER_2> statistics: {}, epsilon {}'.format(agent_2.get_statistics(), agent_2.explorer.epsilon))
+            print('<PLAYER_1> statistics: {}, epsilon {}'.format(agent_1.get_statistics(), agent_1.epsilon()))
+            print('<PLAYER_2> statistics: {}, epsilon {}'.format(agent_2.get_statistics(), agent_2.epsilon()))
             # カウンタ変数の初期化            
             win = 0
             lose = 0
