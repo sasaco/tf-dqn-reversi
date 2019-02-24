@@ -20,16 +20,16 @@ class Agent:
         self.x = tf.placeholder(tf.float32, [None, obs_size])
         self.y = tf.placeholder(tf.float32, [None, n_actions])
 
-        W1 = tf.Variable(tf.random_normal([obs_size, n_nodes], stddev=0.01))
-        b1 = tf.Variable(tf.constant(0.001, shape=[n_nodes]))
-        h1 = tf.nn.relu(tf.matmul(self.x, W1) + b1)
-        W2 = tf.Variable(tf.random_normal([n_nodes, n_actions], stddev=0.01))
-        b2 = tf.Variable(tf.constant(0.001, shape=[n_actions]))
-        self.q = tf.nn.relu(tf.matmul(h1, W2) + b2)
+        W1 = tf.Variable(tf.random_normal([obs_size, n_nodes]))
+        b1 = tf.Variable(tf.constant(0.1, shape=[n_nodes]))
+        h1 = tf.nn.sigmoid(tf.matmul(self.x, W1) + b1)
+        W2 = tf.Variable(tf.random_normal([n_nodes, n_actions]))
+        b2 = tf.Variable(tf.constant(0.1, shape=[n_actions]))
+        self.q = tf.nn.sigmoid(tf.matmul(h1, W2) + b2)
 
         # optimizerの設定
         self.loss = tf.square(self.y - self.q)
-        self.train_op = tf.train.AdagradOptimizer(0.01).minimize(self.loss)
+        self.train_op = tf.train.AdagradOptimizer(1e-3).minimize(self.loss)
         self.sess = tf.Session()
         self.sess.run(tf.initialize_all_variables())
 
@@ -209,7 +209,12 @@ class Agent:
             max_value = np.max(next_Q_values[i])
 
             # 次の状態の Q値 の最大値を 今の状態の Q値 に反映する
-            Q_values[i][action_index] = reward[i] + self.gamma * max_value
+            if done[i] == True:
+                Q_values[i][action_index] = reward[i]
+            elif reward[i] == 0:
+                Q_values[i][action_index] = self.gamma * max_value
+            else:
+                Q_values[i][action_index] = reward[i]
 
         # self.q を loss が小さくなるように self.train_op ルールで更新
         self.sess.run(self.train_op, feed_dict={self.x: state, self.y: Q_values})

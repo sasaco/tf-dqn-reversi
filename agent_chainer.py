@@ -21,9 +21,9 @@ class Brain(chainer.Chain):
             self.l4 = L.Linear(n_nodes, n_actions, initialW=w)
 
     def __call__(self, x):
-        h = F.relu(self.l1(x))
-        h = F.relu(self.l2(h))
-        h = F.relu(self.l3(h))        
+        h = F.sigmoid(self.l1(x))
+        h = F.sigmoid(self.l2(h))
+        h = F.sigmoid(self.l3(h))        
         return chainerrl.action_value.DiscreteActionValue(self.l4(h))
 
 
