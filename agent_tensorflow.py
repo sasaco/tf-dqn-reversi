@@ -8,6 +8,8 @@ import os
 import numpy as np
 import random
 
+import csv
+
 class Agent:
     # エージェントが持つ脳となるクラスです。Q学習を実行します。
 
@@ -17,11 +19,12 @@ class Agent:
 
         self.x = tf.placeholder(tf.float32, [None, obs_size])
         self.y = tf.placeholder(tf.float32, [None, n_actions])
-        W1 = tf.Variable(tf.random_normal([obs_size, n_nodes]))
-        b1 = tf.Variable(tf.constant(0.1, shape=[n_nodes]))
+
+        W1 = tf.Variable(tf.random_normal([obs_size, n_nodes], stddev=0.01))
+        b1 = tf.Variable(tf.constant(0.001, shape=[n_nodes]))
         h1 = tf.nn.relu(tf.matmul(self.x, W1) + b1)
-        W2 = tf.Variable(tf.random_normal([n_nodes, n_actions]))
-        b2 = tf.Variable(tf.constant(0.1, shape=[n_actions]))
+        W2 = tf.Variable(tf.random_normal([n_nodes, n_actions], stddev=0.01))
+        b2 = tf.Variable(tf.constant(0.001, shape=[n_actions]))
         self.q = tf.nn.relu(tf.matmul(h1, W2) + b2)
 
         # optimizerの設定
@@ -29,6 +32,7 @@ class Agent:
         self.train_op = tf.train.AdagradOptimizer(0.01).minimize(self.loss)
         self.sess = tf.Session()
         self.sess.run(tf.initialize_all_variables())
+
         # saver
         self.saver = tf.train.Saver()
 
@@ -58,10 +62,12 @@ class Agent:
 
         self.step_counter = 0
 
-        self.log_reset()
+        self.log = {'average_q': [], 'average_loss': [], 'n_updates': 0}
 
     def log_reset(self):
-         self.log = {'average_q': [], 'average_loss': [], 'n_updates': 0}
+        self.log['average_q'] = []
+        self.log['average_loss'] = []
+        # self.log['n_updates'] = 0
        
 
     def update_Q_table(self, state, available_list, reward, stop=False):
@@ -190,6 +196,7 @@ class Agent:
 
         # self.targetQ がもつ 今の状態の Q値を取得
         Q_values = self.sess.run(self.targetQ, feed_dict={self.x: state})
+
         # self.targetQ がもつ 次の状態の Q値を取得
         next_Q_values = self.sess.run(self.targetQ, feed_dict={self.x: next_state})
 
@@ -209,7 +216,6 @@ class Agent:
 
         #for log
         self.log['average_loss'].append(self.sess.run(self.loss, feed_dict={self.x: state, self.y: Q_values}))
-
 
         self.log['average_q'].append(Q_values)
 
