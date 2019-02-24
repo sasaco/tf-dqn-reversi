@@ -12,7 +12,7 @@ import random
 ### Q関数の定義 ###
 class Brain(chainer.Chain):
     def __init__(self, obs_size, n_actions, n_nodes):
-        w = chainer.initializers.HeNormal(scale=1.0) # 重みの初期化
+        w = chainer.initializers.HeNormal(scale=0.1) # 重みの初期化
         super(Brain, self).__init__()
         with self.init_scope():
             self.l1 = L.Linear(obs_size, n_nodes, initialW=w)

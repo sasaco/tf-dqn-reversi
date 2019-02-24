@@ -20,11 +20,11 @@ class Agent:
         self.x = tf.placeholder(tf.float32, [None, obs_size])
         self.y = tf.placeholder(tf.float32, [None, n_actions])
 
-        W1 = tf.Variable(tf.random_normal([obs_size, n_nodes]))
-        b1 = tf.Variable(tf.constant(0.1, shape=[n_nodes]))
+        W1 = tf.Variable(tf.random_normal([obs_size, n_nodes], stddev=0.1))
+        b1 = tf.Variable(tf.constant(0.01, shape=[n_nodes]))
         h1 = tf.nn.sigmoid(tf.matmul(self.x, W1) + b1)
-        W2 = tf.Variable(tf.random_normal([n_nodes, n_actions]))
-        b2 = tf.Variable(tf.constant(0.1, shape=[n_actions]))
+        W2 = tf.Variable(tf.random_normal([n_nodes, n_actions], stddev=0.1))
+        b2 = tf.Variable(tf.constant(0.01, shape=[n_actions]))
         self.q = tf.nn.sigmoid(tf.matmul(h1, W2) + b2)
 
         # optimizerの設定
