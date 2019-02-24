@@ -6,7 +6,8 @@ Copyright(c) 2018 Koji Makino and Hiromitsu Nishizaki All Rights Reserved.
 from __future__ import print_function
 
 from enviroment import Enviroment
-from agent_chainer import Agent
+#from agent_chainer import Agent
+from agent_tensorflow import Agent
 
 import chainer
 import chainer.functions as F
