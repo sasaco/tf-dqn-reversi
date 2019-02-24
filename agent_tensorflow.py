@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import tensorflow as tf
-import json
 import copy
 from tensorflow.python.framework import ops
 
@@ -41,7 +40,7 @@ class Agent:
         # ε-greedy法
         self.start_epsilon = 1.0
         self.end_epsilon = 0.1
-        self.epsilon = self.start_epsilon
+        self.eps = self.start_epsilon
 
 
         # Expericence Replay用のバッファ（十分大きく）
@@ -137,7 +136,7 @@ class Agent:
          # epsを更新 ( ε-greedy法 )
         if self.step_counter > self.replay_start_size:
             if len(self.replay_buffer) < self.capacity:
-                self.epsilon -= ((self.start_epsilon - self.end_epsilon) /
+                self.eps -= ((self.start_epsilon - self.end_epsilon) /
                              (self.capacity - self.replay_start_size + 1))
 
 
@@ -149,7 +148,7 @@ class Agent:
     def select_int_action(self, state, available_list):
 
         # Follow the epsilon greedy strategy
-        if np.random.rand() < self.epsilon:
+        if np.random.rand() < self.eps:
             int_action = random.choice(available_list)
         else:
             # self.q がもつ Q値を取得
@@ -220,14 +219,14 @@ class Agent:
         average_loss = np.average(self.log['average_loss'])
         n_updates = self.log['n_updates']
 
-        result = '(average_q: {}, average_loss {}, average_loss {})'.format(average_q, average_loss, n_updates)
+        result = '(average_q: {}, average_loss {}, n_updates {})'.format(average_q, average_loss, n_updates)
 
         self.log_reset()
 
         return result
 
     def epsilon(self):
-        return self.epsilon
+        return self.eps
 
     def save(self, dirname):
         save_path = self.saver.save(self.sess, dirname)
