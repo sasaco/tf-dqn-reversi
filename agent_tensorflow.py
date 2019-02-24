@@ -216,13 +216,15 @@ class Agent:
 
     def get_statistics(self):
 
-        result = {}
-        result['average_q'] = np.average(self.log['average_q'])
-        result['average_loss'] = np.average(self.log['average_loss'])
-        result['n_updates'] = self.log['n_updates']
+        average_q = np.average(self.log['average_q'])
+        average_loss = np.average(self.log['average_loss'])
+        n_updates = self.log['n_updates']
+
+        result = '(average_q: {}, average_loss {}, average_loss {})'.format(average_q, average_loss, n_updates)
+
         self.log_reset()
 
-        return json.dumps(result)
+        return result
 
     def epsilon(self):
         return self.epsilon
