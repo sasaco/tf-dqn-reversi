@@ -3,6 +3,7 @@
 import tensorflow as tf
 import copy
 from tensorflow.python.framework import ops
+import os
 
 import numpy as np
 import random
@@ -229,4 +230,6 @@ class Agent:
         return self.eps
 
     def save(self, dirname):
-        save_path = self.saver.save(self.sess, dirname)
+        model_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
+        model_name = "{}.ckpt".format(dirname)
+        self.saver.save(self.sess, os.path.join(model_dir, model_name))
