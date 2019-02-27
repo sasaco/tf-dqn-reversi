@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{f3d53635-393e-45b0-a4fb-9367c3398e96}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>train_reversi.py</StartupFile>
+    <StartupFile>play_reversi.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -22,6 +22,7 @@
     <Compile Include="agent_chainer.py" />
     <Compile Include="agent_tensorflow.py" />
     <Compile Include="enviroment.py" />
+    <Compile Include="play_reversi.py" />
     <Compile Include="train_reversi.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

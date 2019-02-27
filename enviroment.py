@@ -21,6 +21,12 @@ class Enviroment:
         self.obs_size = self.SIZE * self.SIZE      # ボードサイズ（=NN入力次元数）
         self.n_actions = self.SIZE * self.SIZE     # 行動数はSIZE*SIZE（ボードのどこに石を置くか）
 
+        # 表示用
+        self.STONE = [' ', '●', '○'] # 石の表示用
+        self.ROWLABEL = {'a':1, 'b':2, 'c':3, 'd':4, 'e':5, 'f':6, 'g':7, 'h':8} # ボードの横軸ラベル
+        self.N2L = ['', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] # 横軸ラベルの逆引き用
+
+
     # ボードの初期化
     def reset(self):
         self.board = np.zeros((self.SIZE, self.SIZE), dtype=np.float32) # 全ての石をクリア．ボードは2次元配列（i, j）で定義する．
@@ -47,16 +53,15 @@ class Enviroment:
         else:           
             return False
 
+    # 石が置かれていない場所を取得
     def available_index(self):
-
-        index = []
-        # 石が置かれていない場所を取得
+        result = []
         pos = self.search_positions()
         for p in pos:
-            i = p[0] * self.SIZE + p[1]
-            index.append(i) # 石が置ける場所の座標リストの生成
+            i = self.index(p)
+            result.append(i) # 石が置ける場所の座標リストの生成
 
-        return index
+        return result
 
 
     # ターンチェンジ
@@ -64,13 +69,17 @@ class Enviroment:
         self.turn = self.WHITE if self.turn == self.BLACK else self.BLACK
         self.available_pos = self.search_positions() # 石が置ける場所を探索しておく
 
+    # 石を配置する場所を取得．ボードは2次元だが，NNへの入力のため1次元に変換．
     def state(self):
-         # 石を配置する場所を取得．ボードは2次元だが，NNへの入力のため1次元に変換．
         return  np.reshape(self.board.copy(), (-1,))
 
+    # 座標を2次元（i,j）に変換
     def pos(self, index):
-        # 座標を2次元（i,j）に変換
         return divmod(index, self.SIZE)
+
+    # 座標を1次元に変換
+    def index(self, pos):
+        return pos[0] * self.SIZE + pos[1]
 
     # エージェントのアクションと勝敗判定．
     def agent_action(self, pos):
@@ -137,4 +146,16 @@ class Enviroment:
             self.nofb = len(np.where(self.board==self.BLACK)[0])
             self.nofw = len(np.where(self.board==self.WHITE)[0])
             self.winner = self.BLACK if len(np.where(self.board==self.BLACK)[0]) > len(np.where(self.board==self.WHITE)[0]) else self.WHITE
-    
+
+    # ボード表示
+    def print_state(self):
+
+        print('  ', end='')            
+        for i in range(1, self.SIZE + 1):
+            print(' {}'.format(self.N2L[i]), end='') # 横軸ラベル表示
+        print('')
+        for i in range(0, self.SIZE):
+            print('{0:2d} '.format(i+1), end='')
+            for j in range(0, self.SIZE):
+                print('{} '.format(self.STONE[ int(self.board[i][j]) ]), end='') 
+            print('')

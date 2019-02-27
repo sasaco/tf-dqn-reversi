@@ -81,3 +81,11 @@ class Agent:
 
     def save(self, dirname):
         self.agent.save(dirname)
+
+    def load(self, dirname):
+        self.agent.load(dirname)
+
+    def act(self, state, available_index):
+
+        int_action = self.agent.act(state)
+        return int_action

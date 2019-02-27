@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import tensorflow as tf
-import copy
 from tensorflow.python.framework import ops
 import os
 
 import numpy as np
 import random
-
+import copy
 import csv
 
 class Agent:
@@ -168,6 +167,18 @@ class Agent:
 
         return int_action
 
+    def act(self, state, available_list):
+
+        # self.q がもつ Q値を取得
+        Qdata = self.sess.run(self.q, feed_dict={self.x: [state]})[0]
+
+        for i in np.argsort(-Qdata):
+            if i in available_list:
+                int_action = i
+                break
+
+        return int_action
+
 
     def store_transition(self, state, reward, done=False):
         # データを保存 (状態、アクション、報酬、結果)
@@ -244,3 +255,8 @@ class Agent:
         model_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
         model_name = "{}.ckpt".format(dirname)
         self.saver.save(self.sess, os.path.join(model_dir, model_name))
+
+    def load(self, dirname):
+        model_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
+        model_name = "{}.ckpt".format(dirname)
+        self.saver.restore(self.sess, os.path.join(model_dir, model_name))

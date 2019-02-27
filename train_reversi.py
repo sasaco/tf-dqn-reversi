@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-リバーシプログラム（盤面8x8）：エージェント学習プログラム（CNN，DQNを利用）
-Copyright(c) 2018 Koji Makino and Hiromitsu Nishizaki All Rights Reserved.
+リバーシプログラム（盤面8x8）：エージェント学習プログラム（DQNを利用）
 """
 from __future__ import print_function
 
@@ -9,15 +8,6 @@ from enviroment import Enviroment
 #from agent_chainer import Agent
 from agent_tensorflow import Agent
 
-import chainer
-import chainer.functions as F
-import chainer.links as L
-import chainerrl
-import numpy as np
-import sys
-import re # 正規表現
-import random
-import copy
 
 # 定数定義 #
 PLAYER_1 = 1  # ボードのある座標にある石：黒
