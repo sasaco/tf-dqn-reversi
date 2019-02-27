@@ -1,0 +1,6 @@
+model_checkpoint_path: "D:\\Users\\sasa\\Documents\\Python Scripts\\tf-dqn-reversi-master\\models\\agent_2_20000.ckpt"
+all_model_checkpoint_paths: "D:\\Users\\sasa\\Documents\\Python Scripts\\tf-dqn-reversi-master\\models\\agent_2_16000.ckpt"
+all_model_checkpoint_paths: "D:\\Users\\sasa\\Documents\\Python Scripts\\tf-dqn-reversi-master\\models\\agent_2_17000.ckpt"
+all_model_checkpoint_paths: "D:\\Users\\sasa\\Documents\\Python Scripts\\tf-dqn-reversi-master\\models\\agent_2_18000.ckpt"
+all_model_checkpoint_paths: "D:\\Users\\sasa\\Documents\\Python Scripts\\tf-dqn-reversi-master\\models\\agent_2_19000.ckpt"
+all_model_checkpoint_paths: "D:\\Users\\sasa\\Documents\\Python Scripts\\tf-dqn-reversi-master\\models\\agent_2_20000.ckpt"
